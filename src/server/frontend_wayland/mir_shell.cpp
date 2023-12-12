@@ -129,7 +129,19 @@ void Instance::get_normal_surface(struct wl_resource* id, struct wl_resource* su
 
 void Instance::get_utility_surface(struct wl_resource* id, struct wl_resource* surface)
 {
-    new Surface<mw::MirUtilitySurfaceV1, mir_window_type_utility>{id, mf::WlSurface::from(surface)};
+    struct Surface : mw::MirUtilitySurfaceV1
+    {
+        Surface(wl_resource* resource, mf::WlSurface* wl_surface) :
+            mw::MirUtilitySurfaceV1{resource, version}
+        {
+            SurfaceSpecification spec;
+            spec.type = mir_window_type_utility;
+            spec.depth_layer = mir_depth_layer_always_on_top;
+            wl_surface->update_surface_spec(spec);
+        }
+    };
+
+    new Surface{id, mf::WlSurface::from(surface)};
 }
 
 void Instance::get_dialog_surface(struct wl_resource* id, struct wl_resource* surface)
