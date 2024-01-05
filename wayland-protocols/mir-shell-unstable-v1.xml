@@ -71,7 +71,7 @@
       <description summary="create a dialog surface from a surface">
         Create a satellite surface for an existing surface. This assigns the archetype
         of satellite_surface, or raises a protocol error if another archetype is already
-        assigned and the transisition is disallowed.
+        assigned and the transition is disallowed.
 
         TODO Text describing satellite behaviour
       </description>
