@@ -34,7 +34,7 @@
       <description summary="create a normal surface from a surface">
         Create a normal surface archetype for an existing surface. This assigns the archetype
         of normal_surface, or raises a protocol error if another archetype is already
-        assigned and the transisition is disallowed.
+        assigned and the transition is disallowed.
 
         A normal surface exists in the "bottom" layer (c.f. wlr_layer_shell_unstable_v1)
       </description>
