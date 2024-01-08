@@ -248,22 +248,22 @@ private:
     virtual void show_unactivated() override;
 };
 
-class normal_window;
+class regular_window;
 class satellite;
 class dialog;
-class utility;
-auto make_satellite(normal_window* main_window) -> std::unique_ptr<satellite>;
-auto make_dialog(normal_window* main_window) -> std::unique_ptr<dialog>;
-auto make_utility() -> std::unique_ptr<utility>;
+class floating_regular;
+auto make_satellite(regular_window* main_window) -> std::unique_ptr<satellite>;
+auto make_dialog(regular_window* main_window) -> std::unique_ptr<dialog>;
+auto make_floater() -> std::unique_ptr<floating_regular>;
 
-class normal_window : public grey_window
+class regular_window : public grey_window
 {
 public:
-    normal_window(int32_t width, int32_t height);
-    ~normal_window();
+    regular_window(int32_t width, int32_t height);
+    ~regular_window();
 
     static std::list<std::unique_ptr<satellite>> toolboxs;
-    static std::unique_ptr<utility> my_utility;
+    static std::unique_ptr<floating_regular> my_floater;
     static std::unique_ptr<dialog> my_dialog;
 
 protected:
@@ -300,7 +300,7 @@ private:
 class dialog : public grey_window
 {
 public:
-    dialog(int32_t width, int32_t height, normal_window* parent);
+    dialog(int32_t width, int32_t height, regular_window* parent);
     ~dialog();
 
 private:
@@ -310,11 +310,11 @@ private:
         override;
 };
 
-class utility : public grey_window
+class floating_regular : public grey_window
 {
 public:
-    utility(int32_t width, int32_t height);
-    ~utility();
+    floating_regular(int32_t width, int32_t height);
+    ~floating_regular();
 
 private:
     mir_floating_regular_surface_v1* const mir_surface;
@@ -689,11 +689,11 @@ void grey_window::show_unactivated()
     }
 }
 
-std::list<std::unique_ptr<satellite>> normal_window::toolboxs;
-std::unique_ptr<utility> normal_window::my_utility;
-std::unique_ptr<dialog> normal_window::my_dialog;
+std::list<std::unique_ptr<satellite>> regular_window::toolboxs;
+std::unique_ptr<floating_regular> regular_window::my_floater;
+std::unique_ptr<dialog> regular_window::my_dialog;
 
-normal_window::normal_window(int32_t width, int32_t height) :
+regular_window::regular_window(int32_t width, int32_t height) :
     grey_window(width, height, 192),
     mir_regular_surface{globals::mir_shell? mir_shell_v1_get_regular_surface(globals::mir_shell, *this) : nullptr}
 {
@@ -701,7 +701,7 @@ normal_window::normal_window(int32_t width, int32_t height) :
     redraw();
 }
 
-normal_window::~normal_window()
+regular_window::~regular_window()
 {
     if (mir_regular_surface)
     {
@@ -709,7 +709,7 @@ normal_window::~normal_window()
     }
 }
 
-void normal_window::handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state)
+void regular_window::handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state)
 {
     grey_window::handle_keyboard_key(keyboard, serial, time, key, state);
 
@@ -723,7 +723,7 @@ void normal_window::handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, 
             break;
         case KEY_D:my_dialog = make_dialog(this);
             break;
-        case KEY_U:my_utility = make_utility();
+        case KEY_F:my_floater = make_floater();
             break;
         }
     }
@@ -736,7 +736,7 @@ void normal_window::handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, 
     }
 }
 
-void normal_window::handle_keyboard_modifiers(
+void regular_window::handle_keyboard_modifiers(
     wl_keyboard* keyboard, uint32_t serial, uint32_t mods_depressed, uint32_t mods_latched, uint32_t mods_locked,
     uint32_t group)
 {
@@ -785,12 +785,12 @@ void satellite::handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, uint
         switch (key)
         {
         case KEY_ESC:
-            normal_window::toolboxs.clear();
+            regular_window::toolboxs.clear();
             break;
         }
 }
 
-auto make_satellite(normal_window* main_window) -> std::unique_ptr<satellite>
+auto make_satellite(regular_window* main_window) -> std::unique_ptr<satellite>
 {
     if (globals::mir_shell)
     {
@@ -834,7 +834,7 @@ auto make_satellite(normal_window* main_window) -> std::unique_ptr<satellite>
     }
 }
 
-dialog::dialog(int32_t width, int32_t height, normal_window* parent) :
+dialog::dialog(int32_t width, int32_t height, regular_window* parent) :
     grey_window{width, height, 160},
     mir_surface{globals::mir_shell ? mir_shell_v1_get_dialog_surface(globals::mir_shell, *this) : nullptr}
 {
@@ -859,24 +859,24 @@ void dialog::handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, uint32_
         switch (key)
         {
         case KEY_ESC:
-            normal_window::my_dialog.reset();
+            regular_window::my_dialog.reset();
             break;
         }
 }
 
-auto make_dialog(normal_window* main_window) -> std::unique_ptr<dialog>
+auto make_dialog(regular_window* main_window) -> std::unique_ptr<dialog>
 {
     return std::make_unique<dialog>(200, 200, main_window);
 }
 
-utility::utility(int32_t width, int32_t height) :
+floating_regular::floating_regular(int32_t width, int32_t height) :
     grey_window{width, height, 224},
     mir_surface{globals::mir_shell ? mir_shell_v1_get_floating_regular_surface(globals::mir_shell, *this) : nullptr}
 {
     redraw();
 }
 
-utility::~utility()
+floating_regular::~floating_regular()
 {
     if (mir_surface)
     {
@@ -884,21 +884,21 @@ utility::~utility()
     }
 }
 
-void utility::handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state)
+void floating_regular::handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state)
 {
     grey_window::handle_keyboard_key(keyboard, serial, time, key, state);
     if (state == WL_KEYBOARD_KEY_STATE_RELEASED)
         switch (key)
         {
         case KEY_ESC:
-            normal_window::my_utility.reset();
+            regular_window::my_floater.reset();
             break;
         }
 }
 
-auto make_utility() -> std::unique_ptr<utility>
+auto make_floater() -> std::unique_ptr<floating_regular>
 {
-    return std::make_unique<utility>(200,200);
+    return std::make_unique<floating_regular>(200, 200);
 }
 
 wl_pointer_listener const input_listener::pointer_listener =
@@ -1063,7 +1063,7 @@ int main(int argc, char* argv[])
     {
         input_listener input;
 
-        auto const main_window = std::make_unique<normal_window>(main_width, main_height);
+        auto const main_window = std::make_unique<regular_window>(main_width, main_height);
         wl_display_roundtrip(display);
         wl_display_roundtrip(display);
 
