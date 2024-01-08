@@ -31,35 +31,35 @@
     </description>
 
     <request name="get_normal_surface">
-      <description summary="create a normal surface from a surface">
-        Create a normal surface archetype for an existing surface. This assigns the archetype
-        of normal_surface, or raises a protocol error if another archetype is already
-        assigned and the transition is disallowed.
+      <description summary="assign the mir_normal_surface_v1 archetype">
+        Create a mir_normal_surface_v1 archetype for the given surface. This assigns
+        the archetype of normal_surface to the wl_surface, or raises a protocol error
+        if another archetype is already assigned and the transition is disallowed.
 
-        A normal surface exists in the "bottom" layer (c.f. wlr_layer_shell_unstable_v1)
+        A normal surface exists in the mir_depth_layer_application layer
       </description>
       <arg name="id" type="new_id" interface="mir_normal_surface_v1"/>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
     <request name="get_utility_surface">
-      <description summary="create a utility surface from a surface">
-        Create a utility surface for an existing surface. This assigns the archetype
-        of utility_surface, or raises a protocol error if another archetype is already
-        assigned and the transisition is disallowed.
+      <description summary="assign the mir_utility_surface_v1 archetype">
+        Create a mir_utility_surface_v1 archetype for the given surface. This assigns
+        the archetype of utility_surface to the wl_surface, or raises a protocol error
+        if another archetype is already assigned and the transition is disallowed.
 
-        A utility surface exists in the "top" layer (c.f. wlr_layer_shell_unstable_v1)
-        and will not be docked.
+        A utility surface exists in the mir_depth_layer_always_on_top layer and will not
+        be docked.
       </description>
       <arg name="id" type="new_id" interface="mir_utility_surface_v1"/>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
     <request name="get_dialog_surface">
-      <description summary="create a dialog surface from a surface">
-        Create a dialog surface for an existing surface. This assigns the archetype
-        of dialog_surface, or raises a protocol error if another archetype is already
-        assigned and the transisition is disallowed.
+      <description summary="assign the mir_dialog_surface_v1 archetype">
+        Create a mir_dialog_surface_v1 archetype for the given surface. This assigns
+        the archetype of dialog_surface to the wl_surface, or raises a protocol error
+        if another archetype is already assigned and the transition is disallowed.
 
         TODO Text describing dialog behaviour
       </description>
@@ -68,30 +68,16 @@
     </request>
 
     <request name="get_satellite_surface">
-      <description summary="create a dialog surface from a surface">
-        Create a satellite surface for an existing surface. This assigns the archetype
-        of satellite_surface, or raises a protocol error if another archetype is already
-        assigned and the transition is disallowed.
+      <description summary="assign the mir_satellite_surface_v1 archetype">
+        Create a mir_satellite_surface_v1 archetype for the given surface. This assigns
+        the archetype of satellite_surface to the wl_surface, or raises a protocol error
+        if another archetype is already assigned and the transition is disallowed.
 
         TODO Text describing satellite behaviour
       </description>
       <arg name="id" type="new_id" interface="mir_satellite_surface_v1"/>
       <arg name="surface" type="object" interface="wl_surface"/>
       <arg name="positioner" type="object" interface="mir_positioner_v1"/>
-    </request>
-
-    <request name="get_freestyle_surface">
-      <description summary="create a freestyle surface from a surface">
-        Create a freestyle surface for an existing surface. This assigns the archetype
-        of freestyle_surface, or raises a protocol error if another archetype is already
-        assigned and the transisition is disallowed.
-
-        TODO Text describing freestyle behaviour
-      </description>
-      <arg name="id" type="new_id" interface="mir_freestyle_surface_v1"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-      <arg name="positioner" type="object" interface="mir_positioner_v1" allow-null="true"/>
-      <!-- TODO optional attributes describing freestyle behaviour -->
     </request>
 
     <request name="create_positioner">
@@ -457,6 +443,10 @@
           surface is constrained, the gravity is 'left' and the anchor is
           'left', change the gravity to 'right' and the anchor to 'right'.
 
+          The adjusted position is calculated given the original anchor
+          rectangle and offset, but with the new flipped anchor and gravity
+          values.
+
           If the adjusted position also ends up being constrained, the resulting
           position of the flip_x adjustment will be the one before the
           adjustment.
@@ -516,14 +506,10 @@
         Specify the surface position offset relative to the position of the
         anchor on the anchor rectangle and the anchor on the surface. For
         example if the anchor of the anchor rectangle is at (x, y), the surface
-        has the gravity bottom|right, and the offset is (ox, oy), the calculated
+        has the gravity bottom_right, and the offset is (ox, oy), the calculated
         surface position will be (x + ox, y + oy). The offset position of the
         surface is the one used for constraint testing. See
         set_constraint_adjustment.
-
-        An example use case is placing a popup menu on top of a user interface
-        element, while aligning the user interface element of the parent surface
-        with some user interface element placed somewhere in the popup surface.
       </description>
       <arg name="x" type="int" summary="surface position x offset"/>
       <arg name="y" type="int" summary="surface position y offset"/>

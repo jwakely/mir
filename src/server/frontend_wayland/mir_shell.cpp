@@ -51,10 +51,6 @@ struct Instance : mw::MirShellV1
     void
     get_satellite_surface(struct wl_resource* id, struct wl_resource* surface, struct wl_resource* positioner) override;
 
-    void get_freestyle_surface(
-        struct wl_resource* id, struct wl_resource* surface,
-        std::optional<struct wl_resource*> const& positioner) override;
-
     void create_positioner(struct wl_resource* id) override;
 };
 
@@ -153,13 +149,6 @@ void Instance::get_satellite_surface(wl_resource* id, wl_resource* surface, wl_r
 {
     new SurfaceWithPosition<mw::MirSatelliteSurfaceV1, mir_window_type_satellite>
         {id, mf::WlSurface::from(surface), positioner};
-}
-
-void Instance::get_freestyle_surface(
-    wl_resource* id, wl_resource* surface, std::optional<struct wl_resource*> const& positioner)
-{
-    new SurfaceWithPosition<mw::MirFreestyleSurfaceV1, mir_window_type_freestyle>
-        {id, mf::WlSurface::from(surface), positioner.value_or(nullptr)};
 }
 
 void Instance::create_positioner(struct wl_resource* id)
