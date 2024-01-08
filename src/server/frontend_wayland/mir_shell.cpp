@@ -42,7 +42,7 @@ struct Instance : mw::MirShellV1
     Instance(struct wl_resource* resource) :
         MirShellV1{resource, version} {}
 
-    void get_normal_surface(struct wl_resource* id, struct wl_resource* surface) override;
+    void get_regular_surface(struct wl_resource* id, struct wl_resource* surface) override;
 
     void get_utility_surface(struct wl_resource* id, struct wl_resource* surface) override;
 
@@ -118,9 +118,9 @@ void Global::bind(wl_resource* new_zmir_mir_shell_v1)
     new Instance{new_zmir_mir_shell_v1};
 }
 
-void Instance::get_normal_surface(struct wl_resource* id, struct wl_resource* surface)
+void Instance::get_regular_surface(struct wl_resource* id, struct wl_resource* surface)
 {
-    new Surface<mw::MirNormalSurfaceV1, mir_window_type_normal>{id, mf::WlSurface::from(surface)};
+    new Surface<mw::MirRegularSurfaceV1, mir_window_type_normal>{id, mf::WlSurface::from(surface)};
 }
 
 void Instance::get_utility_surface(struct wl_resource* id, struct wl_resource* surface)

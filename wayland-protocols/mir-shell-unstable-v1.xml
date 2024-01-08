@@ -30,15 +30,15 @@
       Clients can use this interface to assign an archetype to wl_surfaces.
     </description>
 
-    <request name="get_normal_surface">
-      <description summary="assign the mir_normal_surface_v1 archetype">
-        Create a mir_normal_surface_v1 archetype for the given surface. This assigns
+    <request name="get_regular_surface">
+      <description summary="assign the mir_regular_surface_v1 archetype">
+        Create a mir_regular_surface_v1 archetype for the given surface. This assigns
         the archetype of normal_surface to the wl_surface, or raises a protocol error
         if another archetype is already assigned and the transition is disallowed.
 
         A normal surface exists in the mir_depth_layer_application layer
       </description>
-      <arg name="id" type="new_id" interface="mir_normal_surface_v1"/>
+      <arg name="id" type="new_id" interface="mir_regular_surface_v1"/>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
@@ -102,7 +102,7 @@
     </request>
   </interface>
 
-  <interface name="mir_normal_surface_v1" version="1">
+  <interface name="mir_regular_surface_v1" version="1">
     <description summary="Mir metadata interface">
       An interface that may be implemented by a wl_surface, for surfaces that
       are designed to be rendered in a desktop-like environment.

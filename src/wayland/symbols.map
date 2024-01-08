@@ -657,11 +657,11 @@ global:
     typeinfo?for?mir::wayland::MirShellV1::Global;
     vtable?for?mir::wayland::MirShellV1::Global;
 
-    mir::wayland::MirNormalSurfaceV1::*;
-    non-virtual?thunk?to?mir::wayland::MirNormalSurfaceV1::*;
-    virtual?thunk?to?mir::wayland::MirNormalSurfaceV1::*;
-    typeinfo?for?mir::wayland::MirNormalSurfaceV1;
-    vtable?for?mir::wayland::MirNormalSurfaceV1;
+    mir::wayland::MirRegularSurfaceV1::*;
+    non-virtual?thunk?to?mir::wayland::MirRegularSurfaceV1::*;
+    virtual?thunk?to?mir::wayland::MirRegularSurfaceV1::*;
+    typeinfo?for?mir::wayland::MirRegularSurfaceV1;
+    vtable?for?mir::wayland::MirRegularSurfaceV1;
 
     mir::wayland::MirUtilitySurfaceV1::*;
     non-virtual?thunk?to?mir::wayland::MirUtilitySurfaceV1::*;
