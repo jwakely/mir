@@ -663,11 +663,11 @@ global:
     typeinfo?for?mir::wayland::MirRegularSurfaceV1;
     vtable?for?mir::wayland::MirRegularSurfaceV1;
 
-    mir::wayland::MirUtilitySurfaceV1::*;
-    non-virtual?thunk?to?mir::wayland::MirUtilitySurfaceV1::*;
-    virtual?thunk?to?mir::wayland::MirUtilitySurfaceV1::*;
-    typeinfo?for?mir::wayland::MirUtilitySurfaceV1;
-    vtable?for?mir::wayland::MirUtilitySurfaceV1;
+    mir::wayland::MirFloatingRegularSurfaceV1::*;
+    non-virtual?thunk?to?mir::wayland::MirFloatingRegularSurfaceV1::*;
+    virtual?thunk?to?mir::wayland::MirFloatingRegularSurfaceV1::*;
+    typeinfo?for?mir::wayland::MirFloatingRegularSurfaceV1;
+    vtable?for?mir::wayland::MirFloatingRegularSurfaceV1;
 
     mir::wayland::MirDialogSurfaceV1::*;
     non-virtual?thunk?to?mir::wayland::MirDialogSurfaceV1::*;

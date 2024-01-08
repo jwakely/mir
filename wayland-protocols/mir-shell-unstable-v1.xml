@@ -33,7 +33,7 @@
     <request name="get_regular_surface">
       <description summary="assign the mir_regular_surface_v1 archetype">
         Create a mir_regular_surface_v1 archetype for the given surface. This assigns
-        the archetype of normal_surface to the wl_surface, or raises a protocol error
+        the archetype of regular_surface to the wl_surface, or raises a protocol error
         if another archetype is already assigned and the transition is disallowed.
 
         A normal surface exists in the mir_depth_layer_application layer
@@ -42,16 +42,16 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
-    <request name="get_utility_surface">
-      <description summary="assign the mir_utility_surface_v1 archetype">
-        Create a mir_utility_surface_v1 archetype for the given surface. This assigns
-        the archetype of utility_surface to the wl_surface, or raises a protocol error
+    <request name="get_floating_regular_surface">
+      <description summary="assign the mir_floating_regular_surface_v1 archetype">
+        Create a mir_floating_regular_surface_v1 archetype for the given surface. This assigns
+        the archetype of floating_regular to the wl_surface, or raises a protocol error
         if another archetype is already assigned and the transition is disallowed.
 
-        A utility surface exists in the mir_depth_layer_always_on_top layer and will not
-        be docked.
+        A floating regular surface exists in the mir_depth_layer_always_on_top layer and will
+        not be docked.
       </description>
-      <arg name="id" type="new_id" interface="mir_utility_surface_v1"/>
+      <arg name="id" type="new_id" interface="mir_floating_regular_surface_v1"/>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
@@ -115,7 +115,7 @@
     </request>
   </interface>
 
-  <interface name="mir_utility_surface_v1" version="1">
+  <interface name="mir_floating_regular_surface_v1" version="1">
     <description summary="Mir metadata interface">
       An interface that may be implemented by a wl_surface, for surfaces that
       are designed to be rendered in a desktop-like environment.

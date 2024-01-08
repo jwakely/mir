@@ -44,7 +44,7 @@ struct Instance : mw::MirShellV1
 
     void get_regular_surface(struct wl_resource* id, struct wl_resource* surface) override;
 
-    void get_utility_surface(struct wl_resource* id, struct wl_resource* surface) override;
+    void get_floating_regular_surface(struct wl_resource* id, struct wl_resource* surface) override;
 
     void get_dialog_surface(struct wl_resource* id, struct wl_resource* surface) override;
 
@@ -123,12 +123,12 @@ void Instance::get_regular_surface(struct wl_resource* id, struct wl_resource* s
     new Surface<mw::MirRegularSurfaceV1, mir_window_type_normal>{id, mf::WlSurface::from(surface)};
 }
 
-void Instance::get_utility_surface(struct wl_resource* id, struct wl_resource* surface)
+void Instance::get_floating_regular_surface(struct wl_resource* id, struct wl_resource* surface)
 {
-    struct Surface : mw::MirUtilitySurfaceV1
+    struct Surface : mw::MirFloatingRegularSurfaceV1
     {
         Surface(wl_resource* resource, mf::WlSurface* wl_surface) :
-            mw::MirUtilitySurfaceV1{resource, version}
+            mw::MirFloatingRegularSurfaceV1{resource, version}
         {
             SurfaceSpecification spec;
             spec.type = mir_window_type_utility;

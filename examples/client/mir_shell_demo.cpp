@@ -275,7 +275,7 @@ protected:
         uint32_t group) override;
 
 private:
-    mir_normal_surface_v1* const mir_normal_surface;
+    mir_regular_surface_v1* const mir_regular_surface;
 
     uint32_t modifiers = 0;
 };
@@ -317,7 +317,7 @@ public:
     ~utility();
 
 private:
-    mir_utility_surface_v1* const mir_surface;
+    mir_floating_regular_surface_v1* const mir_surface;
 
     void handle_keyboard_key(wl_keyboard* keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state)
     override;
@@ -695,7 +695,7 @@ std::unique_ptr<dialog> normal_window::my_dialog;
 
 normal_window::normal_window(int32_t width, int32_t height) :
     grey_window(width, height, 192),
-    mir_normal_surface{globals::mir_shell? mir_shell_v1_get_normal_surface(globals::mir_shell, *this) : nullptr}
+    mir_regular_surface{globals::mir_shell? mir_shell_v1_get_regular_surface(globals::mir_shell, *this) : nullptr}
 {
     xdg_toplevel_set_title(*this, "normal");
     redraw();
@@ -703,9 +703,9 @@ normal_window::normal_window(int32_t width, int32_t height) :
 
 normal_window::~normal_window()
 {
-    if (mir_normal_surface)
+    if (mir_regular_surface)
     {
-        mir_normal_surface_v1_destroy(mir_normal_surface);
+        mir_regular_surface_v1_destroy(mir_regular_surface);
     }
 }
 
@@ -871,7 +871,7 @@ auto make_dialog(normal_window* main_window) -> std::unique_ptr<dialog>
 
 utility::utility(int32_t width, int32_t height) :
     grey_window{width, height, 224},
-    mir_surface{globals::mir_shell ? mir_shell_v1_get_utility_surface(globals::mir_shell, *this) : nullptr}
+    mir_surface{globals::mir_shell ? mir_shell_v1_get_floating_regular_surface(globals::mir_shell, *this) : nullptr}
 {
     redraw();
 }
@@ -880,7 +880,7 @@ utility::~utility()
 {
     if (mir_surface)
     {
-        mir_utility_surface_v1_destroy(mir_surface);
+        mir_floating_regular_surface_v1_destroy(mir_surface);
     }
 }
 
