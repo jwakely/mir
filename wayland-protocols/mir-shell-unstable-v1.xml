@@ -28,6 +28,14 @@
   <interface name="mir_shell_v1" version="1">
     <description summary="create surface archetypes that are recognised by the desktop">
       Clients can use this interface to assign an archetype to wl_surfaces.
+
+      An archetype is like a `wl_surface` role: a surface may have at most one
+      archetype, but unlike a `wl_surface` role a client may assign a new archetype
+      to a surface which already has one. This will remove the old archetype and
+      apply the new one atomically.
+
+      The archetype of a `wl_surface` influences the window-management policies
+      applied to it.
     </description>
 
     <request name="get_regular_surface">
@@ -35,6 +43,10 @@
         Create a mir_regular_surface_v1 archetype for the given surface. This assigns
         the archetype of regular_surface to the wl_surface, or raises a protocol error
         if another archetype is already assigned and the transition is disallowed.
+
+        The previous archetype's role object becomes inert; the client should destroy
+        the previous archetype role object. Any further calls to the previous archetype
+        role object are a protocol error.
 
         A normal surface exists in the mir_depth_layer_application layer
       </description>
@@ -47,6 +59,10 @@
         Create a mir_floating_regular_surface_v1 archetype for the given surface. This assigns
         the archetype of floating_regular to the wl_surface, or raises a protocol error
         if another archetype is already assigned and the transition is disallowed.
+
+        The previous archetype's role object becomes inert; the client should destroy
+        the previous archetype role object. Any further calls to the previous archetype
+        role object are a protocol error.
 
         A floating regular surface exists in the mir_depth_layer_always_on_top layer and will
         not be docked.
@@ -61,6 +77,10 @@
         the archetype of dialog_surface to the wl_surface, or raises a protocol error
         if another archetype is already assigned and the transition is disallowed.
 
+        The previous archetype's role object becomes inert; the client should destroy
+        the previous archetype role object. Any further calls to the previous archetype
+        role object are a protocol error.
+
         TODO Text describing dialog behaviour
       </description>
       <arg name="id" type="new_id" interface="mir_dialog_surface_v1"/>
@@ -72,6 +92,10 @@
         Create a mir_satellite_surface_v1 archetype for the given surface. This assigns
         the archetype of satellite_surface to the wl_surface, or raises a protocol error
         if another archetype is already assigned and the transition is disallowed.
+
+        The previous archetype's role object becomes inert; the client should destroy
+        the previous archetype role object. Any further calls to the previous archetype
+        role object are a protocol error.
 
         TODO Text describing satellite behaviour
       </description>
@@ -109,8 +133,8 @@
     </description>
 
     <request name="destroy" type="destructor">
-      <description summary="destroy the normal surface">
-        This request destroys the mir surface.
+      <description summary="destroy the regular surface archetype">
+        This request destroys the mir surface archetype and disassociates it from the surface.
       </description>
     </request>
   </interface>
@@ -122,8 +146,8 @@
     </description>
 
     <request name="destroy" type="destructor">
-      <description summary="destroy the utility_surface">
-        This request destroys the mir surface.
+      <description summary="destroy the floating_regular surface archetype">
+        This request destroys the mir surface archetype and disassociates it from the surface.
       </description>
     </request>
   </interface>
@@ -135,8 +159,8 @@
     </description>
 
     <request name="destroy" type="destructor">
-      <description summary="destroy the dialog_surface">
-        This request destroys the mir surface.
+      <description summary="destroy the dialog_surface archetype">
+        This request destroys the mir surface archetype and disassociates it from the surface.
       </description>
     </request>
   </interface>
@@ -151,9 +175,8 @@
       <description summary="recalculate the satellite's location">
         Reposition an already-mapped satellite. The satellite will be placed given the
         details in the passed mir_positioner object, and a
-        mir_satellite_surface_v1.repositioned followed by mir_satellite_surface_v1.configure and
-        wl_surface.configure will be emitted in response. Any parameters set
-        by the previous positioner will be discarded.
+        mir_satellite_surface_v1.repositioned followed by wl_surface.configure will be
+        emitted in response. Any parameters set by the previous positioner will be discarded.
 
         The passed token will be sent in the corresponding
         xdg_satellite.repositioned event. The new satellite position will not take
@@ -199,8 +222,8 @@
     </event>
 
     <request name="destroy" type="destructor">
-      <description summary="destroy the satellite_surface">
-        This request destroys the mir surface.
+      <description summary="destroy the satellite_surface archetype">
+        This request destroys the mir surface archetype and disassociates it from the surface.
       </description>
     </request>
   </interface>
