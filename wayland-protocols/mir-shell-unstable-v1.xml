@@ -47,8 +47,6 @@
         The previous archetype's role object becomes inert; the client should destroy
         the previous archetype role object. Any further calls to the previous archetype
         role object are a protocol error.
-
-        A normal surface exists in the mir_depth_layer_application layer
       </description>
       <arg name="id" type="new_id" interface="mir_regular_surface_v1"/>
       <arg name="surface" type="object" interface="wl_surface"/>
@@ -64,7 +62,7 @@
         the previous archetype role object. Any further calls to the previous archetype
         role object are a protocol error.
 
-        A floating regular surface exists in the mir_depth_layer_always_on_top layer and will
+        A floating regular surface is "always on top" of other application windows and will
         not be docked.
       </description>
       <arg name="id" type="new_id" interface="mir_floating_regular_surface_v1"/>
@@ -81,7 +79,27 @@
         the previous archetype role object. Any further calls to the previous archetype
         role object are a protocol error.
 
-        TODO Text describing dialog behaviour
+        A dialog is usually used to communicate information that must be explicitly
+        acknowledged or responded to (for example, to report an error), or to get
+        specific information about something requested in a parent window (for example,
+        a Print dialog) or from a shell function (for example, to confirm shutdown).
+
+        A dialog should have a parent whenever relevant. It may, however, be parentless.
+
+        If a dialog has a parent, it is modal to the parent and any satellites the parent has.
+        This means:
+        (1) A user should be able to move, resize, or hide an open dialog’s parent, but not
+        close it or interact with its contents; and move, resize, or close the parent’s
+        satellites if any, but not interact with their contents.
+        (2) Whenever the parent is minimized or otherwise hidden, the dialog should be minimized
+        or hidden too.
+        (3) Any attempt to give input focus to the parent should focus the dialog instead.
+        Therefore, the dialog and all of its ancestors should be presented as a single entity
+        in any window switcher.
+
+        Partly because of that last behavior, a window should only ever have one dialog child at
+        a time. If an app tries to open a second dialog child, The compositor should close the
+        previous one first.
       </description>
       <arg name="id" type="new_id" interface="mir_dialog_surface_v1"/>
       <arg name="surface" type="object" interface="wl_surface"/>
@@ -97,7 +115,20 @@
         the previous archetype role object. Any further calls to the previous archetype
         role object are a protocol error.
 
-        TODO Text describing satellite behaviour
+        A satellite is an accessory to a regular, floating regular, or dialog window. It
+        always has a parent window, and typically it provides easy access to functions in
+        its parent: for example, a toolbox, formatting palette, or Find/Change window.
+
+        To reduce clutter when a satellite’s parent is not being used, a satellite should be
+        present on screen only when any of its parents is active (for example, when a dialog
+        or another satellite of its parent has input focus). Otherwise, subject to a delay to
+        allow reparenting, it should not be present — not merely invisible or minimized, and
+        not closed, but not present until its parent becomes active again (or an active window
+        becomes its parent).
+
+        To avoid flicker from briefly-appearing dialogs, whenever a satellite’s parent has a
+        child dialog, the satellite should remain present. But like the parent window itself,
+        it should not receive input as long as the dialog is open.
       </description>
       <arg name="id" type="new_id" interface="mir_satellite_surface_v1"/>
       <arg name="surface" type="object" interface="wl_surface"/>
