@@ -36,6 +36,9 @@
 
       The archetype of a `wl_surface` influences the window-management policies
       applied to it.
+
+      The client must call wl_surface.commit on the corresponding wl_surface
+      for the archetype to take effect.
     </description>
 
     <request name="get_regular_surface">
