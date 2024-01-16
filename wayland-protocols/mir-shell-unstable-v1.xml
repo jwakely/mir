@@ -37,8 +37,32 @@
       The archetype of a `wl_surface` influences the window-management policies
       applied to it.
 
-      The client must call wl_surface.commit on the corresponding wl_surface
-      for the archetype to take effect.
+      All archetype state is double-buffered; changing a surface archetype or
+      updates to any archetype state are not applied until the `wl_surface` is
+      `commit`ted.
+
+      Typically, archetype state will be used to augments `xdg_toplevel` state. If a
+      client intends to use an archetype, it SHOULD assign the surface an initial
+      archetype during the initial commit without a buffer attached (see `xdg_surface`).
+
+      Any events sent to an archetype object are latched to and extend the
+      `xdg_surface.configure` event. Any such events should be treated as a part of
+      an atomic set of configuration changes (including any `xdg_toplevel` events)
+      with the `xdg_surface.configure` event committing the accumulated state and
+      requiring a `xdg_surface.ack_configure` call, as normal.
+
+      Changing archetype follows a similar sequence to the initial `xdg_surface`
+      commit. First, a new archetype must be committed. This must be the only state
+      committed in the `wl_surface.commit` request. The compositor will respond with
+      any changes to the surface state prompted by the change of archetype followed
+      by an `xdg_surface.configure` event. The client must ack the configure event
+      (as normal) and the subsequent `wl_surface.commit` will cause the new
+      archetype to be fully applied.
+
+      There are some `wl_surface` roles that conflict with the archetypes described
+      here. Attempting to set both an archetypes and such roles on a surface is a
+      protocol error. In particular, `wl_subsurface`, `wl_cursor` or `xdg_popup` may
+      not be combined with an archetype.
     </description>
 
     <request name="get_regular_surface">
